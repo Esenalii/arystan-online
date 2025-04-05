@@ -27,4 +27,5 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		students.PUT("/:id", studentHandler.UpdateStudent)
 		students.DELETE("/:id", studentHandler.DeleteStudent)
 	}
+
 }

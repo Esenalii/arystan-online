@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db, err := gorm.Open(postgres.Open("postgres://myuser:mypassword@localhost:5444/mydatabase?sslmode=disable"), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open("postgres://myuser:mypassword@localhost:5432/mydatabase?sslmode=disable"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error connecting to the database:", err)
 	}
