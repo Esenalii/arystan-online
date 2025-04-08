@@ -16,7 +16,8 @@ func main() {
 		log.Fatal("Error connecting to the database:", err)
 	}
 
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&models.User{}, &models.Course{})
+
 	if err != nil {
 		log.Fatal("Error on migrating to the DB", err)
 	}

@@ -32,4 +32,14 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		students.PUT("/:id", studentHandler.UpdateStudent)
 		students.DELETE("/:id", studentHandler.DeleteStudent)
 	}
+	courseRepo := repository.NewCourseRepository(db)
+	courseService := service.NewCourseService(courseRepo)
+	courseHandler := delivery.NewCourseHandler(courseService)
+
+	courses := r.Group("/api/v1/courses")
+	{
+		courses.GET("/", courseHandler.GetAll)
+		courses.POST("/", courseHandler.Create)
+	}
+
 }
