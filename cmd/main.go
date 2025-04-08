@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,12 +16,13 @@ func main() {
 		log.Fatal("Error connecting to the database:", err)
 	}
 
-	err = db.AutoMigrate(&models.Student{})
+	err = db.AutoMigrate(&models.User{})
 	if err != nil {
 		log.Fatal("Error on migrating to the DB", err)
 	}
 
 	r := gin.Default()
+	r.Use(cors.Default())
 	routes.SetupRoutes(r, db)
 	r.Run(":8080")
 }
