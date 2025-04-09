@@ -41,5 +41,12 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		courses.GET("/", courseHandler.GetAll)
 		courses.POST("/", courseHandler.Create)
 	}
+	userRepo := repository.NewUserRepository(db)
+	userHandler := delivery.NewUserHandler(userRepo)
+
+	users := r.Group("/api/v1/users")
+	{
+		users.GET("/", userHandler.GetAllUsers)
+	}
 
 }
