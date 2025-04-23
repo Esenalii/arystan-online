@@ -13,7 +13,7 @@ func GenerateJWT(userID uint) (string, error) {
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(os.Getenv("SECRET"))
+	return token.SignedString([]byte(os.Getenv("SECRET")))
 }
 
 func ValidateJWT(tokenStr string) (*jwt.Token, jwt.MapClaims, error) {

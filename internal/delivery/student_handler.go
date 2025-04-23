@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-// Конструктор
 func NewStudentHandler(service *service.StudentService) *StudentHandler {
 	return &StudentHandler{service: service}
 }
@@ -17,13 +16,11 @@ type StudentHandler struct {
 	service *service.StudentService
 }
 
-// Получение списка всех студентов
 func (h *StudentHandler) GetAllStudents(c *gin.Context) {
 	students, _ := h.service.GetAllStudents()
 	c.JSON(http.StatusOK, students)
 }
 
-// Получение студента по ID
 func (h *StudentHandler) GetStudent(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

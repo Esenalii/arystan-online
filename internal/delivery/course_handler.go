@@ -25,6 +25,12 @@ func (h *CourseHandler) GetAll(c *gin.Context) {
 }
 
 func (h *CourseHandler) Create(c *gin.Context) {
+	roleVal, exists := c.Get("role")
+	if !exists || roleVal != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Only admins can create courses"})
+		return
+	}
+
 	var course models.Course
 	if err := c.ShouldBindJSON(&course); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
