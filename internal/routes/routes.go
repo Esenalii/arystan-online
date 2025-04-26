@@ -30,6 +30,7 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		adminRoutes.POST("/courses", courseHandler.Create)
 		adminRoutes.POST("/users", userHandler.CreateUser)
+		adminRoutes.GET("/users", userHandler.GetAllUsers)
 		adminRoutes.PUT("/users/:id", userHandler.UpdateUser)
 		adminRoutes.DELETE("/users/:id", userHandler.DeleteUser)
 	}

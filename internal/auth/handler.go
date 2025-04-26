@@ -42,6 +42,7 @@ func Register(c *gin.Context) {
 		Name     string `json:"name"`
 		Password string `json:"password"`
 		Email    string `json:"email"`
+		Role     string `json:"role"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil || req.Name == "" || req.Password == "" || req.Email == "" {
@@ -65,7 +66,7 @@ func Register(c *gin.Context) {
 		Name:     req.Name,
 		Password: string(hashedPassword),
 		Email:    req.Email,
-		Role:     "student",
+		Role:     req.Role,
 	}
 	if err := db.DB.Create(&u).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
