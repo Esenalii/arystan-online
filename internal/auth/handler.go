@@ -30,7 +30,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, _ := GenerateJWT(u.ID)
+	token, err := GenerateJWT(u.ID, u.Role)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "token generation failed"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 		"role":  u.Role,
