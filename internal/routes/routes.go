@@ -22,17 +22,16 @@ func SetupRoutes(r *gin.Engine) {
 	courseService := service.NewCourseService(courseRepo)
 	courseHandler := delivery.NewCourseHandler(courseService)
 
-	studentRepo := repository.NewStudentRepository(db.DB)
-	studentService := service.NewStudentService(studentRepo)
-	studentHandler := delivery.NewStudentHandler(studentService)
+	userRepo := repository.NewUserRepository(db.DB)
+	userHandler := delivery.NewUserHandler(userRepo)
 
 	adminRoutes := r.Group("/admin")
 	adminRoutes.Use(middleware.AdminOnly())
 	{
 		adminRoutes.POST("/courses", courseHandler.Create)
-		adminRoutes.POST("/students", studentHandler.CreateStudent)
-		adminRoutes.PUT("/students/:id", studentHandler.UpdateStudent)
-		adminRoutes.DELETE("/students/:id", studentHandler.DeleteStudent)
+		adminRoutes.POST("/users", userHandler.CreateUser)
+		adminRoutes.PUT("/users/:id", userHandler.UpdateUser)
+		adminRoutes.DELETE("/users/:id", userHandler.DeleteUser)
 	}
 
 	r.GET("/courses", courseHandler.GetAll)
@@ -40,7 +39,6 @@ func SetupRoutes(r *gin.Engine) {
 	teacherRoutes := r.Group("/teacher")
 	teacherRoutes.Use(middleware.TeacherOnly())
 	{
-		teacherRoutes.GET("/students", studentHandler.GetAllStudents)
-		teacherRoutes.GET("/students/:id", studentHandler.GetStudent)
+		teacherRoutes.GET("/users", userHandler.GetAllUsers)
 	}
 }
