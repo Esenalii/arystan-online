@@ -13,6 +13,8 @@ services:
       - "5444:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
   my-item-service:
     depends_on:
@@ -32,5 +34,12 @@ services:
       - "8888:8080"
     volumes:
       - ./internal/db/migrations:/app/internal/db/migrations
+    networks:
+      - backend
+
 volumes:
   postgres_data:
+
+networks:
+  backend:
+    driver: bridge
