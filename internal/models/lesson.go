@@ -8,5 +8,4 @@ type Lesson struct {
 	Content  string `json:"content"`
 	Video    string `json:"video"`
 	CourseID uint   `json:"course_id"`
-	Course   Course `gorm:"foreignKey:CourseID"`
 }

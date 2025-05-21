@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"rest-project/internal/auth"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"rest-project/internal/auth"
 )
 
 func AuthRequired() gin.HandlerFunc {
@@ -56,6 +57,8 @@ func AdminOnly() gin.HandlerFunc {
 			return
 		}
 
+		c.Set("role", role)
+
 		userIDFloat, ok := claims["user_id"].(float64)
 		if !ok {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token payload"})
@@ -66,6 +69,7 @@ func AdminOnly() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
 func TeacherOnly() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -75,9 +79,10 @@ func TeacherOnly() gin.HandlerFunc {
 		}
 
 		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+
 		_, claims, err := auth.ValidateJWT(tokenStr)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
 			return
 		}
 
@@ -87,9 +92,12 @@ func TeacherOnly() gin.HandlerFunc {
 			return
 		}
 
+		// рольді контекстке сақтап қоямыз
+		c.Set("role", role)
+
 		userIDFloat, ok := claims["user_id"].(float64)
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token payload"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid token payload"})
 			return
 		}
 

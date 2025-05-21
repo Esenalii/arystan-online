@@ -22,3 +22,29 @@ func (r *CourseRepository) GetAll() ([]models.Course, error) {
 func (r *CourseRepository) Create(course *models.Course) error {
 	return r.DB.Create(course).Error
 }
+
+func (r *CourseRepository) GetByIDWithLessons(id uint) (*models.Course, error) {
+	var course models.Course
+	if err := r.DB.
+		Preload("Lessons").
+		First(&course, id).
+		Error; err != nil {
+		return nil, err
+	}
+	return &course, nil
+}
+
+func (r *CourseRepository) GetLessonsByCourseID(courseID uint) ([]models.Lesson, error) {
+	var lessons []models.Lesson
+	if err := r.DB.
+		Where("course_id = ?", courseID).
+		Find(&lessons).
+		Error; err != nil {
+		return nil, err
+	}
+	return lessons, nil
+}
+
+func (r *CourseRepository) Delete(id uint) error {
+	return r.DB.Delete(&models.Course{}, id).Error
+}

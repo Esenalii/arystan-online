@@ -25,21 +25,36 @@ func SetupRoutes(r *gin.Engine) {
 	userRepo := repository.NewUserRepository(db.DB)
 	userHandler := delivery.NewUserHandler(userRepo)
 
+	lessonRepo := repository.NewLessonRepository(db.DB)
+	lessonService := service.NewLessonService(lessonRepo)
+	lessonHandler := delivery.NewLessonHandler(r, lessonService)
+
 	adminRoutes := r.Group("/admin")
 	adminRoutes.Use(middleware.AdminOnly())
 	{
 		adminRoutes.POST("/courses", courseHandler.Create)
+		adminRoutes.DELETE("/courses/:course_id", courseHandler.Delete)
+		adminRoutes.GET("/lessons", lessonHandler.GetAll)
 		adminRoutes.POST("/users", userHandler.CreateUser)
 		adminRoutes.GET("/users", userHandler.GetAllUsers)
 		adminRoutes.PUT("/users/:id", userHandler.UpdateUser)
 		adminRoutes.DELETE("/users/:id", userHandler.DeleteUser)
+		adminRoutes.POST("/courses/:course_id/lessons", lessonHandler.Create)
+		adminRoutes.DELETE("/courses/:course_id/lessons/:id", lessonHandler.Delete)
+		adminRoutes.PUT("/courses/:course_id/lessons/:id", lessonHandler.Update)
 	}
 
 	r.GET("/courses", courseHandler.GetAll)
+	r.GET("/courses/:course_id", courseHandler.GetLessons)
+	r.GET("/courses/:course_id/:lesson_id", lessonHandler.LessonOneId)
+	r.GET("/courses/:course_id/details", courseHandler.GetCourseDetails)
 
 	teacherRoutes := r.Group("/teacher")
 	teacherRoutes.Use(middleware.TeacherOnly())
 	{
 		teacherRoutes.GET("/users", userHandler.GetAllUsers)
+		teacherRoutes.POST("/courses/:course_id/lessons", lessonHandler.Create)
+		teacherRoutes.DELETE("/courses/:course_id/lessons/:id", lessonHandler.Delete)
+		teacherRoutes.PUT("/courses/:course_id/lessons/:lesson_id", lessonHandler.Update)
 	}
 }
